@@ -7,17 +7,14 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>Easy Solutions Web Portal</title>
   <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-<!-- add angular: -->
+  <!-- add angular: -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
   <!-- add ui-router: -->
-  
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
-  
-  
+  <!-- add main public javascript -->
   <script src="/javascripts/pubapp.js"></script>
 
 <!--
-
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
@@ -35,94 +32,74 @@
   <style> .glyphicon-thumbs-up { cursor:pointer } </style>
 </head>
 
-
-<body ng-app="txncheck">
-
-
+<body ng-app="didwebportal">
 
 <section id="menu-5">
-
         <div class="container">
-
             <div class="mbr-table">
                 <div class="mbr-table-cell">
-
                     <div class="navbar-brand">
                         <a href="http://www.easysol.net" ><img src="assets/images/es-tpf-2-155x128-38.png" alt="Easy Solutions Inc." title="EASY SOLUTIONS"></a>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
 </section>
 
-
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-
-<div class="page-header">
-<h1>Risk Based Authentication Web Portal</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="page-header">
+            <h1>Risk Based Authentication Web Portal</h1>
+        </div>
+        <a ui-sref="init">Home</a> | <a ui-sref="clientmnu">Clients</a> | <a ui-sref="selfmnu">Self Service</a> | <a ui-sref="admnmnu">Administrator</a> | <a ui-sref="settmnu">Settings</a> | <a ui-sref="enrol">Test Enrol | <a ui-sref="about">About</a>
+        <ui-view></ui-view>
+    </div>
 </div>
 
-
-<a ui-sref="init">Home</a> | <a ui-sref="clientmnu">Clients</a> | <a ui-sref="selfmnu">Self Service</a> | <a ui-sref="admnmnu">Administrator</a> |<a ui-sref="settmnu">Settings</a>
-
-
-
-            <ui-view></ui-view>
-        </div>
-    </div>
-
-      <div class="page-footer col-md-6 col-md-offset-3">
-      <h3>
-      <a href="#/home.html">
-      Home
-      </a>
-      </h3>
-      </div>
+<div class="page-footer col-md-6 col-md-offset-3">
+    <h3>
+        <a href="#/home.html">
+        Home
+        </a>
+    </h3>
+</div>
 
 
 <!-- init view -->
 
 <script type="text/ng-template" id="/init.html">
 
-<br></br>
-<h2>Quick Links</h2>
-<br></br>
-<ul>
-    <li ng-repeat="item in menu">
-        <a ui-sref="{{ item.stateid }}">{{ item.title }}</a>
-    </li>
-</ul>
-
+    <br></br>
+    <h2>Quick Links</h2>
+    <br></br>
+    <ul>
+        <li ng-repeat="item in menu">
+            <a ui-sref="{{ item.stateid }}">{{ item.title }}</a>
+        </li>
+    </ul>
 <!--
-
 <div ng-repeat="item in menu | orderBy:'-upvotes'">
       <span class="glyphicon glyphicon-chevron-right"
       ng-click="initialisepage(item)"></span>
 	<a ng-click="initialisepage(item)">{{item.title}}</a>
 </div>
-
 -->
-
-
 </script>
-
-
 
 <!-- About view -->
 
-
-
 <script type="text/ng-template" id="/about.html">
-
-<br></br>
-Demo App
-
+    <br></br>
+    Demo App
 </script>
 
+<!-- Enrol view -->
+
+<script type="text/ng-template" id="/enrol.html">
+    <br></br>
+    Use this url in the DID App:
+
+</script>
 
  <!-- client menu -->
 

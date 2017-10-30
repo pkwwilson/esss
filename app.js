@@ -7,14 +7,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var soap = require('soap');
+// var soap = require('soap');
 
 var database = require('./db/config/database');
 
 // routes =======================
-var index = require('./routes/index');
-var users = require('./routes/users');
-
+var index   = require('./routes/index');
+var users   = require('./routes/users');
 var soapapi = require('./routes/SOAPapi');
 
 var app = express();
@@ -66,20 +65,9 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
-
-
-
-
-
 console.log("End api setup");
 
-
-
-
 module.exports = app;
-
 
 // log startup message
 console.log("Started txn");

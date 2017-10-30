@@ -1,22 +1,21 @@
-var app = angular.module('txncheck', ['ui.router']);
+var app = angular.module('didwebportal', ['ui.router']);
 
-app.factory('posts', [function(){
-                      var o = {
-                      posts: [{title: 'hello', link:'www.com', upvotes: 5}]
-                      };
-                      return o;
-                      }]);
-
+// app.factory('posts', [function(){
+//                      var o = {
+//                      posts: [{title: 'hello', link:'www.com', upvotes: 5}]
+//                      };
+//                      return o;
+//                      }]);
 
 app.factory('menu', [function(){
                       var o = {
-
-                      menu: [   
-				{title: 'Client Information', stateid:'clientmnu'},
-				{title: 'Customer Self Service', stateid:'selfmnu'},
-				{title: 'Administrator Functions', stateid:'admnmnu'},
-                     		{title: 'Settings', stateid:'settmnu'}         ]
-				};
+                            menu: [   
+                            {title: 'Client Information', stateid:'clientmnu'},
+                            {title: 'Customer Self Service', stateid:'selfmnu'},
+                            {title: 'Administrator Functions', stateid:'admnmnu'},
+                            {title: 'Settings', stateid:'settmnu'}
+                            ]
+                            };
                       return o;
                       }]);
 
@@ -24,9 +23,7 @@ app.factory('menu', [function(){
 app.config([
             '$stateProvider',
             '$urlRouterProvider',
-            function($stateProvider, $urlRouterProvider) {
-            
-            
+            function($stateProvider, $urlRouterProvider) {           
             $stateProvider
             .state('init', {
                    url: '/init',
@@ -48,50 +45,51 @@ app.config([
                    templateUrl: '/clientmnu.html',
                    controller: 'clientvCtrl'
                    });
+
             $stateProvider
             .state('clientdet', {
                    url: '/clientdet:sharedKey',
                    templateUrl: '/clientdet.html',
                    controller: 'clientdetCtrl'
                    });
+
             $stateProvider
-            .state
-		('selfmnu', {
+            .state('selfmnu', {
                    url: '/selfmnu',
                    templateUrl: '/selfmnu.html',
                    controller: 'selfvCtrl'
                    });
+
             $stateProvider
-            .state
-		('selfno', {
+            .state('selfno', {
                    url: '/selfno:sharedKey',
                    templateUrl: '/selfno.html',
                    controller: 'selfnoCtrl'
                    });
+
             $stateProvider
-            .state
-		('selfyes', {
+            .state('selfyes', {
                    url: '/selfyes:sharedKey',
                    templateUrl: '/selfyes.html',
                    controller: 'selfvCtrl'
                    });
+
             $stateProvider
-            .state
-		('selfadd', {
+            .state('selfadd', {
                    url: '/selfadd:sharedKey',
                    templateUrl: '/selfadd.html',
                    controller: 'selfaddCtrl'
                    });
+
             $stateProvider
-            .state
-		('admnmnu', {
+            .state('admnmnu', {
                    url: '/admnmnu',
                    templateUrl: '/admnmnu.html',
                    controller: 'admnvCtrl'
                    });
+
             $stateProvider
-            .state
-		('settmnu', {
+            .state('settmnu', {
                    url: '/settmnu',
                    templateUrl: '/settmnu.html',
                    controller: 'settvCtrl'
@@ -118,7 +116,6 @@ app.config([
                    controller: 'settvCtrl'
                    });
 
-            
             $stateProvider
             .state('home', {
                    url: '/home',
@@ -132,33 +129,29 @@ app.config([
                    templateUrl: '/about.html',
                    controller: 'MainCtrl'
                    });
-  
-            
+
+            $stateProvider
+            .state('enrol', {
+                   url: '/enrol',
+                   templateUrl: '/enrol.html',
+                   controller: 'MainCtrl'
+                   });
+
             $urlRouterProvider.otherwise('init');
             }]);
 
 
 app.controller('initCtrl', [
-			    '$scope',
-			    '$state',
-			    'menu',
-			
-			    function($scope, $state, menu){
-
+               '$scope',
+               '$state',
+               'menu',
+                function($scope, $state, menu){
                             $scope.menu = menu.menu;
-
                             $scope.initialisepage = function(menu){
-                            $state.go(menu.stateid);
-                            };
-
-                            }]);
-
-
-
-
-
-
-
+                                  $state.go(menu.stateid);
+                                  };
+                            }
+                ]);
 
 app.controller('authCtrl', [
                              '$scope',

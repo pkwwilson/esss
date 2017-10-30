@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Easy Solutions Web Portal</title>
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- add angular: -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+  <!-- add ui-router: -->
+  
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
+  
+  
+  <script src="/javascripts/pubapp.js"></script>
+
+<!--
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="/assets/et-line-font-plugin/style.css">
+  <link rel="stylesheet" href="/assets/bootstrap-material-design-font/css/material.css">
+  <link rel="stylesheet" href="/assets/tether/tether.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/socicon/css/socicon.min.css">
+  <link rel="stylesheet" href="/assets/animate.css/animate.min.css">
+  <link rel="stylesheet" href="/assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="/assets/theme/css/style.css">
+  <link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css" type="text/css">
+ -->
+
+  <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+</head>
+
+
+<body ng-app="txncheck">
+
+
+
+<section id="menu-5">
+
+        <div class="container">
+
+            <div class="mbr-table">
+                <div class="mbr-table-cell">
+
+                    <div class="navbar-brand">
+                        <a href="http://www.easysol.net" ><img src="assets/images/es-tpf-2-155x128-38.png" alt="Easy Solutions Inc." title="EASY SOLUTIONS"></a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+</section>
+
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+<div class="page-header">
+<h1>Risk Based Authentication Web Portal</h1>
+</div>
+
+
+<a ui-sref="init">Home</a> | <a ui-sref="clientmnu">Clients</a> | <a ui-sref="selfmnu">Self Service</a> | <a ui-sref="admnmnu">Administrator</a> |<a ui-sref="settmnu">Settings</a>
+
+
+
+            <ui-view></ui-view>
+        </div>
+    </div>
+
+      <div class="page-footer col-md-6 col-md-offset-3">
+      <h3>
+      <a href="#/home.html">
+      Home
+      </a>
+      </h3>
+      </div>
+
+
+<!-- init view -->
+
+<script type="text/ng-template" id="/init.html">
+
+<br></br>
+<h2>Quick Links</h2>
+<br></br>
+<ul>
+    <li ng-repeat="item in menu">
+        <a ui-sref="{{ item.stateid }}">{{ item.title }}</a>
+    </li>
+</ul>
+
+<!--
+
+<div ng-repeat="item in menu | orderBy:'-upvotes'">
+      <span class="glyphicon glyphicon-chevron-right"
+      ng-click="initialisepage(item)"></span>
+	<a ng-click="initialisepage(item)">{{item.title}}</a>
+</div>
+
+-->
+
+
+</script>
+
+
+
+<!-- About view -->
+
+
+
+<script type="text/ng-template" id="/about.html">
+
+<br></br>
+Demo App
+
+</script>
+
+
+ <!-- client menu -->
+
+  <script type="text/ng-template" id="/clientmnu.html">
+      <div class="page-footer">
+      <h3>Client Data</h3>
+      </div>
+
+<div>
+
+Client Count is {{clientCount}}
+
+<br></br>
+
+Client List:
+
+            <div class="col-md-12 col-md-offset-1">
+                <div class="checkbox" ng-repeat="clientitems in clientlist.client">
+                    <label>
+                        <a ui-sref="clientdet({sharedKey : clientitems.sharedKey })"> Client Name: {{ clientitems.businessIdentifier }} </a>
+                    </label>
+                </div>
+        </div>
+
+</div>
+
+</script>
+
+ <!-- client detail -->
+
+  <script type="text/ng-template" id="/clientdet.html">
+      <div class="page-footer">
+      <h3>Client Detail - {{clientinfo.businessIdentifier}}</h3>
+      </div>
+
+<div>
+
+<br></br>
+
+Information:
+
+            <div class="col-md-12 col-md-offset-1">
+                <div class="checkbox" ng-repeat="(key, value) in clientinfo">
+                    <label>
+                        <a ng-click="getinfo(detitems._id)"> {{ key }} : {{ value }} </a>
+                    </label>
+                </div>
+        </div>
+
+</div>
+
+</script>
+
+
+ <!-- selfserv menu -->
+
+  <script type="text/ng-template" id="/selfmnu.html">
+
+
+<div>
+
+      <form ng-submit="checksharedKey()"
+      style="margin-top:30px;">
+      <h3>Enter Customer sharedKey:</h3>
+      <div class="form-group"> 
+      <input type="text"
+      class="form-control"
+      placeholder="sharedKey"
+      ng-model="sharedKeyInput"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+</div>
+
+</script>
+
+ <!-- selfno menu -->
+
+  <script type="text/ng-template" id="/selfno.html">
+
+      <div class="page-footer">
+      <h3>User {{itemsharedKey}} Not Present</h3>
+      </div>
+
+The user is not present in the system, would you like to add the user 
+
+{{itemsharedKey}}
+
+<br></br>
+
+        <div id="bulktxn-form" class="row">
+            <div class="col-sm-20 col-sm-offset-2 text-center">
+                <form>
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="gotoadd()">Add user to system</button>
+                </form>
+            </div>
+        </div>
+</script>
+
+
+ <!-- selfadd menu -->
+
+  <script type="text/ng-template" id="/selfadd.html">
+
+      <div class="page-footer">
+      <h3>Add User {{itemsharedKey}}</h3>
+      </div>
+
+Complete the details for {{itemsharedKey}}
+
+<br></br>
+
+        <div id="bulktxn-form" class="row">
+            <div class="col-sm-20 col-sm-offset-2 text-center">
+                <form>
+                        <input type="text" class="form-control input-lg text-left" placeholder="Enter Business ID" ng-model="formData.busid">
+                        <input type="text" class="form-control input-lg text-left" placeholder="Enter email" ng-model="formData.email">
+                        <input type="text" class="form-control input-lg text-left" placeholder="Enter cellphone number" ng-model="formData.cell">
+
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="selfservadd(itemsharedkey, formData.busid, formData.email, formData.cell )">Add user to system</button>
+                </form>
+            </div>
+        </div>
+</script>
+
+
+ <!-- settings menu -->
+
+  <script type="text/ng-template" id="/settmnu.html">
+      <div class="page-footer">
+      <h3>Settings</h3>
+      </div>
+
+<div>
+<ul>
+
+    <li>        <a ui-sref="soaplistv">Soap List</a>    </li>
+    <li>        <a ui-sref="soapaddv">Add to Soap List</a>    </li>
+    <li>        <a ui-sref="soapresetv">Reset Soap List</a>    </li>
+
+</ul>
+</div>
+
+</script>
+
+
+<!-- soaplist view -->
+
+  <script type="text/ng-template" id="/soaplistv.html">
+      <div class="page-footer">
+      <h3>SOAP Settings</h3>
+      </div>
+<br>Click an entry to remove it from the database</br>
+<br></br>
+
+            <div class="col-md-12 col-md-offset-1">
+                <div class="checkbox" ng-repeat="soapitems in soapdbs">
+                    <label>
+                        <a ng-click="deletesoap(soapitems._id)"> Reference : {{ soapitems.soapfunction }} SOAP name : {{ soapitems.soapname }} WSDL URL: {{ soapitems.wsdlurl }} : {{ soapitems.endpointurl }} </a>
+                    </label>
+                </div>
+        </div>
+
+
+
+      </script>
+
+<!-- soaplist add view -->
+
+  <script type="text/ng-template" id="/soapaddv.html">
+      <div class="page-footer">
+      <h3>Add SOAP values</h3>
+      </div>
+
+
+        <div id="txn-form" class="row">
+            <div class="col-sm-20 col-sm-offset-2 text-center">
+                <form>
+                    <div class="form-group">
+                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+
+			<input type="text" class="form-control input-lg text-left" placeholder="Business name for Request" ng-model="formData.soapfunction"> 
+			<input type="text" class="form-control input-lg text-left" placeholder="SOAP name" ng-model="formData.soapname"> 
+			<input type="text" class="form-control input-lg text-left" placeholder="URL for WSDL" ng-model="formData.wsdlurl"> 
+			<input type="text" class="form-control input-lg text-left" placeholder="Endpoint URL" ng-model="formData.endpointurl"> 
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="addsoap()">Add</button>
+                </form>
+            </div>
+        </div>
+
+      </script>
+
+
+<!-- soaplist reset view -->
+
+  <script type="text/ng-template" id="/soapresetv.html">
+      <div class="page-footer">
+      <h3>Reset SOAP list</h3>
+      </div>
+
+        <div id="bulktxn-form" class="row">
+            <div class="col-sm-20 col-sm-offset-2 text-center">
+                <form>
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="soapreset()">Reset SOAP config</button>
+                </form>
+            </div>
+        </div>
+
+      </script>
+
+
+<!-- client Statistics : include numbers for each factor etc. -->
+
+  <script type="text/ng-template" id="/clientst.html">
+      <div class="page-footer">
+      <h3>Client Statistics</h3>
+      </div>
+
+	</br>
+      <h4>Overall</h4>
+            <div class="col-md-12 col-md-offset-1">
+                <div class="checkbox" ng-repeat="genitem in gentxnstatinfo">
+                    <label>
+                        <h4 >
+			Total: {{genitem.clientCount}} 
+			</h4>
+                    </label>
+                </div>
+
+        </div>
+      </br>
+
+
+ <h4>Per Account</h4>
+            <div class="col-md-12 col-md-offset-1">
+                <div  ng-repeat="item in txnstatinfo">
+                    <label>
+                        <h4 > Origin Account: {{item._id}} </br>
+			Total: {{item.amntTotal}} Average: {{item.amntAvg.toFixed(2)}} StdDev: {{item.amntStdDev.toFixed(2)}} 
+			</h4>
+                    </label>
+                </div>
+
+        </div>
+
+      </script>
+  
+
+
+
+
+
+
+  <!-- the posts view -->
+  
+  <script type="text/ng-template" id="/posts.html">
+      <div class="page-header">
+      <h3>
+      <a ng-show="post.link" href="{{post.link}}">
+      {{post.title}}
+      </a>
+      <span ng-hide="post.link">
+      {{post.title}}
+      </span>
+      </h3>
+      </div>
+      
+      <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+      <span class="glyphicon glyphicon-thumbs-up"
+      ng-click="incrementUpvotes(comment)"></span>
+      {{comment.upvotes}} - by {{comment.author}}
+      <span style="font-size:20px; margin-left:10px;">
+      {{comment.body}}
+      </span>
+      </div>
+      
+      <form ng-submit="addComment()"
+      style="margin-top:30px;">
+      <h3>Add a new comment</h3>
+      
+      <div class="form-group"> 
+      <input type="text"
+      class="form-control"
+      placeholder="Comment"
+      ng-model="body"></input>
+      </div>
+      <button type="submit" class="btn btn-primary">Post</button>
+      </form>
+      
+
+      
+      
+      </script>
+  
+  
+  <!-- end of posts view -->
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

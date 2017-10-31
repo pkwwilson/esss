@@ -16,63 +16,55 @@ router.get('/', function(req, res, next) {
 
 
 
-
-
+// api ---------------------------------------------------------------------
+// get all clients
 console.log("Start api setup");
-    // api ---------------------------------------------------------------------
-    // get all clients
-    router.get('/api/soaplist', function(req, res) {
-
-        // use mongoose to get all soapdbs in the database
-        soapdb.find(function(err, soapdbs) {
-
-            // if there is an error retrieving, send the error. nothing after res.send(err) will execute
-            if (err)
-                res.send(err)
-
-            res.json(soapdbs); // return all  in JSON format
-        });
+router.get('/api/soaplist', function(req, res) {
+    // use mongoose to get all soapdbs in the database
+    soapdb.find(function(err, soapdbs) {
+        // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+        if (err)
+            res.send(err)
+        res.json(soapdbs); // return all  in JSON format
     });
+});
 
-    // create  and send back all after creation
-    router.post('/api/soaplist', function(req, res) {
-
-        // create, information comes from AJAX request from Angular
-        soapdb.create({
-            soapfunction : req.body.soapfunction,
-            soapname : req.body.soapname,
-            wsdlurl : req.body.wsdlurl,
-            endpointurl : req.body.endpointurl
+// create  and send back all after creation
+router.post('/api/soaplist', function(req, res) {
+    // create, information comes from AJAX request from Angular
+    soapdb.create({
+        soapfunction : req.body.soapfunction,
+        soapname : req.body.soapname,
+        wsdlurl : req.body.wsdlurl,
+        endpointurl : req.body.endpointurl
         }, function(err, soaps) {
             if (err)
                 res.send(err);
-
             // get and return all  after you create another
             soapdb.find(function(err, soapdbs) {
                 if (err)
                     res.send(err)
-                res.json(soapdbs);
-            });
-        });
-
+				res.json(soapdbs);
+	    });
     });
+});
 
-    // delete 
-    router.delete('/api/soaplist/:soapdb_id', function(req, res) {
-        soapdb.remove({
-            _id : req.params.soapdb_id
+// delete 
+router.delete('/api/soaplist/:soapdb_id', function(req, res) {
+    soapdb.remove({
+        _id : req.params.soapdb_id
         }, function(err, soaps) {
-            if (err)
-                res.send(err);
+        if (err)
+            res.send(err);
 
-            // get and return all after you delete
-            soapdb.find(function(err, soapdbs) {
-                if (err)
-                    res.send(err)
-                res.json(soapdbs);
-            });
+        // get and return all after you delete
+        soapdb.find(function(err, soapdbs) {
+            if (err)
+                res.send(err)
+            res.json(soapdbs);
         });
     });
+});
 
     // delete all config
     router.delete('/api/soaplistclear', function(req, res) {
@@ -89,11 +81,9 @@ console.log("Start api setup");
             });
         });
     });
-
-
     // add default config
-    router.post('/api/soaplistdef', function(req, res) {
-	console.log("here");
+router.post('/api/soaplistdef', function(req, res) {
+	console.log("in post soaplistdef");
 	//console.log(req.body);
 	
 	var soapdefarr = [ 
@@ -155,50 +145,40 @@ console.log("Start api setup");
 
 
 
-    // call an ES SOAP API
-
-
-    router.post('/api/callsoap/:soapobj', function(req, res) {
-//    router.get('/api/callsoap/', function(req, res) {
-        // call soap
-	console.log("in callsoap");
-
+// call an ES SOAP API
+router.post('/api/callsoap/:soapobj', function(req, res) {
+    // call soap
+    console.log("in callsoap");
 	var inpobj = JSON.parse(req.params.soapobj);
 	var name = "soapfunction";
 	//var value = "retrieveClientsCount";
 	var value = inpobj.soapref;
 	console.log("value: " + value);
-
 	var query = {};
 	query[name] = value;
-
 	soapdb.findOne(query, function(err, soapitem) {
 	console.log("in findOne");
-	
 
-  
 	// if there is an error retrieving, send the error. nothing after res.send(err) will execute
-
 	if (err)
 		res.send(err)
-		var queryresult = soapitem; // return all  in JSON format
-	    console.log("soapitem is: " + queryresult);
+	var queryresult = soapitem; // return all  in JSON format
+	console.log("soapitem is: " + queryresult);
+	console.log("out of find");
+	//var wsdlurl = 'http://demotfp.easysol.net/detect/services/WSClientService?wsdl';
+	var wsdlurl = queryresult.wsdlurl;
+	var args = inpobj.args;
+	console.log("args: " + JSON.stringify(inpobj.args));
+	//var args = {};
+	var clientOptions = { };
 
-		console.log("out of find");
-		//var wsdlurl = 'http://demotfp.easysol.net/detect/services/WSClientService?wsdl';
-		var wsdlurl = queryresult.wsdlurl;
-		var args = inpobj.args;
-		console.log("args: " + JSON.stringify(inpobj.args));
-		//var args = {};
-		var clientOptions = { };
-
-		soap.createClient(wsdlurl, clientOptions, function(err, client) {
+	soap.createClient(wsdlurl, clientOptions, function(err, client) {
 		if(err)
 			console.error(err);
-			else {
+		else {
 			client.wsdl.xmlnsInEnvelope = client.wsdl._xmlnsMap();	
 
-			switch (value) 	{
+		switch (value) 	{
 			  case 'retrieveClientsCount':
 				client.retrieveClientsCount(inpobj.args, function(err, result) {			
 				  if (err)
@@ -242,18 +222,44 @@ console.log("Start api setup");
 			  default:
 			    console.log('No match in case statement');
 			}
-
-
-	}
-  
-  });
-
-
+	        }
         });
+    });
+
+});
 
 
+// GET - New API for showing enrol information from DID app
+router.get('/api/enrolinfo', function(req, res) {
+    // create, information comes from AJAX request from Angular
+	console.log("In GET enrolinfo");
+	res.send('Enrolinfo');
+});
+
+// POST - New API for showing enrol information from DID app
+router.post('/api/enrolinfo/', function(req, res) {
+    // create, information comes from AJAX request from Angular
+	console.log("In POST enrolinfo")
+	console.log(req.body);
+	console.log(req.body.phoneId);
+	console.log(req.query);
+	res.send('Post response');
+});
+
+// POST with args - New API for showing enrol information from DID app
+router.post('/api/enrolinfo2/:enrolobj', function(req, res) {
+    // create, information comes from AJAX request from Angular
+	console.log("In POST with args enrolinfo")
+	console.log("body: " + req.body);
+	console.log("body.code: " + req.body.code);
+	console.log("params: " + req.params);
+	console.log("param value: " + req.params.enrolobj);
+	//var inpobj = JSON.parse(req.params.enrolobj);
+	//console.log("inpobj: " + inpobj)
+	//var value = inpobj.code;
+	res.send("Value is: " + req.params.enrolobj);
+	
   });
-
 
 
 

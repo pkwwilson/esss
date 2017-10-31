@@ -266,29 +266,24 @@ app.controller('settvCtrl', [
 
 app.controller('selfvCtrl', [
                              '$scope',
-			     '$state',
+                             '$state',
                              '$stateParams',
-			     '$http',
-                             function($scope, $state, $stateParams, $http){
-                                                          
-                             
-                             
+			                 '$http',
+                             function($scope, $state, $stateParams, $http){                             
                              $scope.checksharedKey = function(){
-                             if($scope.sharedKeyInput === '') { return; }
-
-				var usesharedKey = $scope.sharedKeyInput;
-	
-   				 var jsonreqobj = JSON.stringify({ "soapref" : "isClientPresent" , 
-				      "args" : { "sharedKey" : $scope.sharedKeyInput } });
-			console.log("jsonreq: " + jsonreqobj);			
-  			  $http.post('/api/callsoap/' + jsonreqobj)
-        			.success(function(data) {
-            			console.log(data);
-            			$scope.clientPresenceresultCode = data.return.resultCode;
-
-switch($scope.clientPresenceresultCode) {
-    case "97":
-        //{ alert("97 - not present") };
+                             if($scope.sharedKeyInput === '') 
+                             { return; }
+				             var usesharedKey = $scope.sharedKeyInput;	
+   				             var jsonreqobj = JSON.stringify({ "soapref" : "isClientPresent" , 
+				                                               "args" : { "sharedKey" : $scope.sharedKeyInput } });
+                             console.log("jsonreq: " + jsonreqobj);			
+                             $http.post('/api/callsoap/' + jsonreqobj)
+                                  .success(function(data) {
+            			              console.log(data);
+            			              $scope.clientPresenceresultCode = data.return.resultCode;
+                                      switch($scope.clientPresenceresultCode) {
+                                             case "97":
+                                            //{ alert("97 - not present") };
 	$state.go('selfno', ({sharedKey : usesharedKey }) );
         break;
     case "503":

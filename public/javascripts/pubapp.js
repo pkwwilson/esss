@@ -71,7 +71,7 @@ app.config([
             .state('selfyes', {
                    url: '/selfyes:sharedKey',
                    templateUrl: '/selfyes.html',
-                   controller: 'selfvCtrl'
+                   controller: 'selfyesCtrl'
                    });
 
             $stateProvider
@@ -283,15 +283,16 @@ app.controller('selfvCtrl', [
             			              $scope.clientPresenceresultCode = data.return.resultCode;
                                       switch($scope.clientPresenceresultCode) {
                                              case "97":
-                                            //{ alert("97 - not present") };
-	$state.go('selfno', ({sharedKey : usesharedKey }) );
-        break;
-    case "503":
-        { alert("503 - client is present") };
-        break;
-    default:
-        { alert("unknown") }; 
-}; 
+                                                 //{ alert("97 - not present") };
+	                                             $state.go('selfno', ({sharedKey : usesharedKey }) );
+                                                 break;
+                                             case "503":
+                                                 //{ alert("503 - client is present") };
+                                                 $state.go('selfyes', ({sharedKey : usesharedKey }) );
+                                                 break;
+                                             default:
+                                                 { alert("unknown") }; 
+                                      }; 
 
 	    			 // if($scope.clientPresenceresultCode = "97") { $state.go('selfno', ({sharedKey : usesharedKey }) ); } // 503 means it is present
         			})                   
@@ -321,120 +322,97 @@ app.controller('selfvCtrl', [
 
 app.controller('selfnoCtrl', [
                              '$scope',
-			     '$state',
+                             '$state',
                              '$stateParams',
-			     '$http',
+                             '$http',
                              function($scope, $state, $stateParams, $http){
-                                                          
-                             
-                             $scope.itemsharedKey = $stateParams.sharedKey;
-				console.log("skey: " + $scope.itemsharedKey);
-
-
-                             $scope.gotoadd = function(){
-  				$state.go('selfadd', ({sharedKey : $scope.itemsharedKey }) );
-                             }; // end checksharedKey
-                             
-                             
-                             }]); // end selfvCtrl
-
-
+                                 $scope.itemsharedKey = $stateParams.sharedKey;
+	                             console.log("skey: " + $scope.itemsharedKey);
+                                 $scope.gotoadd = function(){
+  	                                 $state.go('selfadd', ({sharedKey : $scope.itemsharedKey }) );
+                                }; // end checksharedKey                             
+                             }]); // end selfnoCtrl
 
 // selfyesCtrl control
 
 app.controller('selfyesCtrl', [
-                             '$scope',
-			     '$state',
-                             '$stateParams',
-			     '$http',
-                             function($scope, $state, $stateParams, $http){
-                                                          
-                             
-                             $scope.itemsharedKey = $stateParams.sharedKey;
-				console.log("skey: " + $scope.itemsharedKey);
-
-
-                             $scope.gotoadd = function(){
-  				$state.go('selfadd', ({sharedKey : $scope.itemsharedKey }) );
-                             }; // end checksharedKey
-                             
-                             
-                             }]); // end selfvCtrl
-
-
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$http',
+    function($scope, $state, $stateParams, $http){                  
+        $scope.itemsharedKey = $stateParams.sharedKey;
+        $scope.selectedsharedKey = $stateParams.sharedKey;
+        console.log("skey: " + $scope.itemsharedKey);
+        $scope.formData = {};
+        $scope.clientData = "<Fetching>";
+        var jsonreqobj = JSON.stringify({ "soapref" : "retrieveClientInformation" , "args" : { "sharedKey" : selectedsharedKey } });
+        console.log(jsonreqobj);
+        // when landing on the page, call callsoap with param of retrieveClientsCount
+        $http.post('/api/callsoap/' + jsonreqobj)
+        .success(function(data) {        
+            console.log(data);        
+            $scope.clientCountresultCode = data.return.resultCode;        
+            $scope.detail_data = data.return.client        
+        })        
+        .error(function(data) {        
+            console.log('Error: ' + data);
+        });    
+    }]); // end selfvCtrl
 
 
 
 // selfaddCtrl control
 
 app.controller('selfaddCtrl', [
-                             '$scope',
-			     '$state',
-                             '$stateParams',
-			     '$http',
+                            '$scope',
+                            '$state',
+                            '$stateParams',
+                            '$http',
                              function($scope, $state, $stateParams, $http){
-                                                          
-                             
                              $scope.itemsharedKey = $stateParams.sharedKey;
-			     var useskey = $stateParams.sharedKey;
-				console.log("skey: " + $scope.itemsharedKey);
-
-
+                             var useskey = $stateParams.sharedKey;
+                             console.log("skey: " + $scope.itemsharedKey);
                              $scope.selfservadd = function( skey, busid, mail, cell ){
-
-    var jsonreqobj = JSON.stringify({ "soapref" : "createClient" , "args" : { "sharedKey" : useskey, "businessIdentifier" : busid , "mail" : mail , "cellPhoneNumber" : cell } });
-	console.log(jsonreqobj);
-
-    // when landing on the page, call callsoap with param of retrieveClientsCount
-    $http.post('/api/callsoap/' + jsonreqobj)
-        .success(function(data) {
-            console.log(data);
-            $scope.clientcreateresultCode = data.createClientResponse.resultCode;
-		if($scope.clientcreateresultCode = "1020") { alert("Successfully Added") };       
-	    //$scope.clientLists = $scope.calltwofunction();
-	    $scope.calltwofunction();
-        })                   
-        .error(function(data) {
-            console.log('Error: ' + data);
-        }); 
-  				
-                             }; // end selfservadd
-                             
-                             
+                                 var jsonreqobj = JSON.stringify({ "soapref" : "createClient" , "args" : { "sharedKey" : useskey, "businessIdentifier" : busid , "mail" : mail , "cellPhoneNumber" : cell } });
+                                 console.log(jsonreqobj);
+                                 // when landing on the page, call callsoap with param of retrieveClientsCount
+                                 $http.post('/api/callsoap/' + jsonreqobj)
+                                         .success(function(data) {
+                                                         console.log(data);
+                                                         $scope.clientcreateresultCode = data.createClientResponse.resultCode;
+                                                         if($scope.clientcreateresultCode = "1020") { alert("Successfully Added") };       
+                                                         //$scope.clientLists = $scope.calltwofunction();
+                                                         $scope.calltwofunction();
+                                                        })                   
+                                        .error(function(data) {
+                                            console.log('Error: ' + data);
+                                        }); 
+                                    }; // end selfservadd
                              }]); // end selfvCtrl
-
-
-
-// clientmenu control
-
-
+                             // clientmenu control
+                             
 app.controller('clientvCtrl', [
-                             '$scope',
-                             '$http',
-			     '$state',
-
-                             function($scope, $http, $state){
-          
-
-    $scope.formData = {};
-    $scope.clientCount = "<Fetching>";
-
-
-    var jsonreqobj = JSON.stringify({ "soapref" : "retrieveClientsCount" , "args" : "" });
-	console.log(jsonreqobj);
-
-    // when landing on the page, call callsoap with param of retrieveClientsCount
-    $http.post('/api/callsoap/' + jsonreqobj)
-        .success(function(data) {
-            console.log(data);
-            $scope.clientCountresultCode = data.return.resultCode;
-	    $scope.clientCount = data.return.clientsCount;
-	    //$scope.clientLists = $scope.calltwofunction();
-	    $scope.calltwofunction();
-        })                   
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+                        '$scope',
+                        '$http',
+                        '$state',
+                        function($scope, $http, $state){
+                            $scope.formData = {};
+                            $scope.clientCount = "<Fetching>";
+                            var jsonreqobj = JSON.stringify({ "soapref" : "retrieveClientsCount" , "args" : "" });
+                            console.log(jsonreqobj);
+                            // when landing on the page, call callsoap with param of retrieveClientsCount
+                            $http.post('/api/callsoap/' + jsonreqobj)
+                            .success(function(data) {
+                                console.log(data);
+                                $scope.clientCountresultCode = data.return.resultCode;
+                                $scope.clientCount = data.return.clientsCount;
+                                //$scope.clientLists = $scope.calltwofunction();
+                                $scope.calltwofunction();
+                            })
+                            .error(function(data) {
+                                console.log('Error: ' + data);
+                            });
 
 
 $scope.calltwofunction = function () {

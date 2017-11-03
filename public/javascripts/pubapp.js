@@ -265,45 +265,44 @@ app.controller('settvCtrl', [
 // selfvCtrl control
 
 app.controller('selfvCtrl', [
-                             '$scope',
-                             '$state',
-                             '$stateParams',
-			                 '$http',
-                             function($scope, $state, $stateParams, $http){                             
-                             $scope.checksharedKey = function(){
-                             if($scope.sharedKeyInput === '') 
-                             { return; }
-				             var usesharedKey = $scope.sharedKeyInput;	
-   				             var jsonreqobj = JSON.stringify({ "soapref" : "isClientPresent" , 
-				                                               "args" : { "sharedKey" : $scope.sharedKeyInput } });
-                             console.log("jsonreq: " + jsonreqobj);			
-                             $http.post('/api/callsoap/' + jsonreqobj)
-                                  .success(function(data) {
-            			              console.log(data);
-            			              $scope.clientPresenceresultCode = data.return.resultCode;
-                                      switch($scope.clientPresenceresultCode) {
-                                             case "97":
-                                                 //{ alert("97 - not present") };
-	                                             $state.go('selfno', ({sharedKey : usesharedKey }) );
-                                                 break;
-                                             case "503":
-                                                 //{ alert("503 - client is present") };
-                                                 $state.go('selfyes', ({sharedKey : usesharedKey }) );
-                                                 break;
-                                             default:
-                                                 { alert("unknown") }; 
-                                      }; 
-
-	    			 // if($scope.clientPresenceresultCode = "97") { $state.go('selfno', ({sharedKey : usesharedKey }) ); } // 503 means it is present
-        			})                   
-        			.error(function(data) {
-            			console.log('Error: ' + data);
-        			});
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$http',
+    function($scope, $state, $stateParams, $http){                             
+    $scope.checksharedKey = function(){
+        if($scope.sharedKeyInput === '') 
+        { return; }
+        var usesharedKey = $scope.sharedKeyInput;	
+        var jsonreqobj = JSON.stringify({ "soapref" : "isClientPresent" , 
+                                          "args" : { "sharedKey" : $scope.sharedKeyInput } });
+    console.log("jsonreq: " + jsonreqobj);			
+    $http.post('/api/callsoap/' + jsonreqobj)
+    .success(function(data) {
+        console.log(data);
+        $scope.clientPresenceresultCode = data.return.resultCode;
+        switch($scope.clientPresenceresultCode) {
+            case "97":
+            //{ alert("97 - not present") };
+            $state.go('selfno', ({sharedKey : usesharedKey }) );
+            break;
+            case "503":
+            //{ alert("503 - client is present") };
+            $state.go('selfyes', ({sharedKey : usesharedKey }) );
+            break;
+            default:
+            { alert("unknown") }; 
+        }; 
+        // if($scope.clientPresenceresultCode = "97") { $state.go('selfno', ({sharedKey : usesharedKey }) ); } // 503 means it is present
+    })                   
+    .error(function(data) {
+        console.log('Error: ' + data);
+    });
 
 //switch($scope.clientPresenceresultCode) {
 //    case "97":
 //        { alert("97 - not present") };
-//	$state.go('selfno', ({sharedKey : usesharedKey }) );
+//	$state.go('', ({sharedKey : usesharedKey }) );
 //        break;
 //    case "503":
 //        { alert("503 - client is present") };
@@ -321,20 +320,20 @@ app.controller('selfvCtrl', [
 // selfnoCtrl control
 
 app.controller('selfnoCtrl', [
-                             '$scope',
-                             '$state',
-                             '$stateParams',
-                             '$http',
-                             function($scope, $state, $stateParams, $http){
-                                 $scope.itemsharedKey = $stateParams.sharedKey;
-	                             console.log("skey: " + $scope.itemsharedKey);
-                                 $scope.gotoadd = function(){
-  	                                 $state.go('selfadd', ({sharedKey : $scope.itemsharedKey }) );
-                                }; // end checksharedKey                             
-                             }]); // end selfnoCtrl
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$http',
+    function($scope, $state, $stateParams, $http){
+        $scope.itemsharedKey = $stateParams.sharedKey;
+        console.log("skey: " + $scope.itemsharedKey);
+        $scope.gotoadd = function(){
+            $state.go('selfadd', ({sharedKey : $scope.itemsharedKey }) );
+        }; // end checksharedKey                             
+    }]); // end selfnoCtrl
+
 
 // selfyesCtrl control
-
 app.controller('selfyesCtrl', [
     '$scope',
     '$state',
@@ -342,14 +341,13 @@ app.controller('selfyesCtrl', [
     '$http',
     function($scope, $state, $stateParams, $http){                  
         $scope.itemsharedKey = $stateParams.sharedKey;
-        $scope.selectedsharedKey = $stateParams.sharedKey;
         console.log("skey: " + $scope.itemsharedKey);
         $scope.formData = {};
-        $scope.clientData = "<Fetching>";
-        var jsonreqobj = JSON.stringify({ "soapref" : "retrieveClientInformation" , "args" : { "sharedKey" : selectedsharedKey } });
-        console.log(jsonreqobj);
-        // when landing on the page, call callsoap with param of retrieveClientsCount
-        $http.post('/api/callsoap/' + jsonreqobj)
+        console.log("in selfyes")
+        //$scope.clientData = "<Fetching>";
+        var jsonreqobj2 = JSON.stringify({ "soapref" : "retrieveClientInformation" , "args" : { "sharedKey" : $scope.itemsharedKey } });
+        //// when landing on the page, call callsoap with param of retrieveClientsCount
+        $http.post('/api/callsoap/' + jsonreqobj2)
         .success(function(data) {        
             console.log(data);        
             $scope.clientCountresultCode = data.return.resultCode;        
@@ -358,7 +356,7 @@ app.controller('selfyesCtrl', [
         .error(function(data) {        
             console.log('Error: ' + data);
         });    
-    }]); // end selfvCtrl
+    }]); // end selfyesCtrl
 
 
 
@@ -416,10 +414,9 @@ app.controller('clientvCtrl', [
 
 
 $scope.calltwofunction = function () {
-
     var jsonreqobj = JSON.stringify({ "soapref" : "retrieveClientsList" , 
-				      "args" : { "retrieveClientRequest" : { "pagination" : { "pageNumber" : "1" , "pageSize" : $scope.clientCount } } } });
-	console.log("jsonreq: " + jsonreqobj);
+                                      "args" : { "retrieveClientRequest" : { "pagination" : { "pageNumber" : "1" , "pageSize" : $scope.clientCount } } } });
+                                console.log("jsonreq: " + jsonreqobj);
     $http.post('/api/callsoap/' + jsonreqobj)
         .success(function(data) {
             console.log(data);
@@ -439,94 +436,51 @@ $scope.calltwofunction = function () {
 
 
 app.controller('clientdetCtrl', [
-                             '$scope',
-                             '$http',
-			     '$state',
-			     '$stateParams',
-
-                             function($scope, $http, $state, $stateParams){
-
-
-    itemsharedkey = $stateParams.sharedKey;
-
-    var jsonreqobjdet = JSON.stringify({ "soapref" : "retrieveClientInformation" , 
-				      "args" : { "sharedKey" : itemsharedkey } });
-	console.log("jsonreq: " + jsonreqobjdet);
-    $http.post('/api/callsoap/' + jsonreqobjdet)
+    '$scope',
+    '$http',
+	'$state',
+    '$stateParams',
+    function($scope, $http, $state, $stateParams){
+        itemsharedkey = $stateParams.sharedKey;
+        var jsonreqobjdet = JSON.stringify({ "soapref" : "retrieveClientInformation" , 
+                                             "args" : { "sharedKey" : itemsharedkey } });
+        console.log("jsonreq: " + jsonreqobjdet);
+        $http.post('/api/callsoap/' + jsonreqobjdet)
         .success(function(data) {
             console.log(data);
             $scope.clientinfocode = data.retrieveClientInformationResponse.resultCode;
-	    $scope.clientinfo = data.retrieveClientInformationResponse.client;
-	    console.log("info: " + $scope.clientinfo);
+            $scope.clientinfo = data.retrieveClientInformationResponse.client;
+            console.log("info: " + $scope.clientinfo);
         })                   
         .error(function(data) {
             console.log('Error: ' + data);
         });
-
-             
-                             
-                             }]); // end control
-
-
-
-
-
+    }]); // end control
 
 // clientst control
-
-
 app.controller('clientstCtrl', [
-                             '$scope',
-                             '$http',
-
-                             function($scope, $http){
-          
-
-    $scope.formData = {};
-
-    // when landing on the page, get all stats and show them
-
-    $http.get('/api/clientstats')
+    '$scope',
+    '$http',
+    function($scope, $http){
+        $scope.formData = {};
+        // when landing on the page, get all stats and show them
+        $http.get('/api/clientstats')
         .success(function(data) {
             $scope.clientstatinfo = data;
             console.log(data);
-
-	    //2nd call
-	    $http.get('/api/genclientstats')
-	        .success(function(gendata) {
-	            $scope.genclientstatinfo = gendata;
-	            console.log(gendata);
-	        })                   
-	        .error(function(gendata) {
-	            console.log('Error: ' + gendata);
-	        });
-		//end 2nd call
-
+            //2nd call
+            $http.get('/api/genclientstats')
+            .success(function(gendata) {
+                $scope.genclientstatinfo = gendata;
+                console.log(gendata);
+            })                   
+            .error(function(gendata) {
+                console.log('Error: ' + gendata);
+            });
+            //end 2nd call
         })                   
         .error(function(data) {
             console.log('Error: ' + data);
         });
-
-
-
-
-             
-                             
-                             }]); // end control
-
-
-
-
-
-
-
-
-
-
-
-
-                           
-                             
-                             
-                  
+    }]); // end control
 
